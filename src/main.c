@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
-#include "../inc/student.h"
+#include "student.h"
 
 #define BUFSIZE         32
 #define STUNUM          32
@@ -107,6 +107,7 @@ _InputAge:
 
 _Fail:
     exit(1);
+
 _Exit:
     deallocStudentRecords(stu);
     return 0;
