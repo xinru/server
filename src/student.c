@@ -87,14 +87,33 @@ int addStudent(STU *stu, char *name, int age, int studyID)
     return 0;
 }
 
-delStudent()
+int delStudent(STU *stu, int studyID)
 {
+    for (int i = 0; i < numberOfStudents; i++) {
+        if (stu[i].studyID == studyID 
+                && stu[i].useFlag) {
+            stu[i].useFlag = 0;
+            printf("Deleted Successfully!\n");
+            return 0;
+        }
+    }
 
+    fprintf(stderr, "Student <%d> to delete does not exsist!\n", studyID);
+    return -1;
 }
 
-searchStudent()
+int searchStudent(STU *stu, int studyID)
 {
+    for (int i = 0; i < numberOfStudents; i++) {
+        if (stu[i].studyID == studyID
+                && stu[i].useFlag) {
+            printStudent(stu, i);
+            return 0;
+        }
+    }
 
+    fprintf(stderr, "Student <%d> to search does not exsist!\n", studyID);
+    return -1;
 }
 
 void deallocStudentRecords(STU *stu)

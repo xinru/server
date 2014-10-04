@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <errno.h>
 #include "../inc/student.h"
 
@@ -10,7 +11,7 @@
  * 将用户的输入转换成long类型，并返回转换结果
  * 返回 －1 代表转换失败
  */
-long getInput(void)
+static long getInput(void)
 {
     char buf[BUFSIZE] = {0};
     long result = -1;
@@ -19,11 +20,24 @@ long getInput(void)
     result = strtol(buf, NULL, 0);
     if ((result == 0 && errno == EINVAL)
             || (errno == ERANGE)) {
-        result = - 1;
+        result = -1;
         errno = 0;
     }
 
     return result;
+}
+
+static int getStudyID(void)
+{
+    int studyID = -1;
+_InputStudyID:
+    fprintf(stdout, "Please Input Student's Study ID:\n");
+    studyID = (int)getInput();
+    if (studyID < MINSTUDYID || studyID > MAXSTUDYID) {
+        fprintf(stderr, "Invalid Input!(Study ID Must in [20140001-20149999])\n"); 
+            goto _InputStudyID;
+    }
+    return studyID;
 }
 
 int main(void)
@@ -46,6 +60,7 @@ int main(void)
 
         // 2. 接收用户输入的命令:(怀疑用户的输入,也就是对用户输入进行检查)
         cmd = getInput();
+        fpurge(stdin);
         if (cmd == -1 || cmd > kQuitCMD || cmd < kListStudents) {
             fprintf(stderr, "Invalid Command!\n");
             continue;
@@ -54,7 +69,7 @@ int main(void)
         // 3. 匹配用户输入的命令，执行相应的操作
         switch (cmd) {
             case kListStudents:
-                printStudents();
+                printStudents(stu);
                 break;
             case kAddStudent:
                 fprintf(stdout, "Please Input Student's Name:\n");
@@ -69,21 +84,16 @@ _InputAge:
                     goto _InputAge;
                 }
 
-_InputStudyID:
-                fprintf(stdout, "Please Input Student's Study ID:\n");
-                studyID = (int)getInput();
-                if (studyID < MINSTUDYID || studyID > MAXSTUDYID) {
-                    fprintf(stderr, "Invalid Input!(Study ID Must in [20140001-20149999])\n"); 
-                    goto _InputStudyID;
-                }
-                
+                studyID = getStudyID(); 
                 addStudent(stu, stuName, stuAge, studyID);
                 break;
             case kDelStudent:
-                delStudent();
+                studyID = getStudyID();
+                delStudent(stu, studyID);
                 break;
             case kSearchStudent:
-                searchStudent();
+                studyID = getStudyID();
+                searchStudent(stu, studyID);
                 break;
             case kQuitCMD:
                 goto _Exit;

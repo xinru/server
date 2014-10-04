@@ -25,8 +25,8 @@ enum command {
 extern STU *allocStudentRecords(int number);
 extern void printStudents(STU *stu);
 extern int addStudent(STU *stu, char *name, int age, int studyID);
-extern delStudent();
-extern searchStudent();
+extern int delStudent(STU *stu, int studyID);
+extern int searchStudent(STU *stu, int studyID);
 extern void deallocStudentRecords(STU *);
 
 #endif
