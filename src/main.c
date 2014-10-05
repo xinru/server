@@ -48,11 +48,23 @@ int main(void)
     int studyID = -1;
     STU *stu = NULL;
 
+    // 打开保存学生记录的文件
+    system("touch records");
+    FILE *fp = fopen("records", "r+");
+    if (fp == NULL) {
+        perror("fopen");
+        goto _Fail1;
+    }
+
     // 为学生记录申请内存并初始化
     stu = allocStudentRecords(STUNUM);
     if (NULL == stu) {
-        goto _Fail;    
+        goto _Fail2;    
     }
+    
+    // 从保存学生记录的文件中读取记录到内存里
+    fread(stu, sizeof(STU), STUNUM, fp);
+    rewind(fp);
 
     while (1) {
         // 1. 提示用户输入命令
@@ -105,10 +117,15 @@ _InputAge:
 
     }
 
-_Fail:
+_Fail2:
+    fclose(fp);
+_Fail1:
     exit(1);
 
 _Exit:
+    // 将学生记录写入到记录文件
+    fwrite(stu, sizeof(STU), STUNUM, fp);
+    fclose(fp);
     deallocStudentRecords(stu);
     return 0;
 }
