@@ -1,16 +1,19 @@
 CFLAGS += -Iinc/
 
-ALL: src/main.o src/student.o 
-	cc -o student src/main.o src/student.o
+objects = src/main.o src/student.o
 
+ALL: $(objects)
+	cc -o student $(objects)
+
+.PHONY: clean tmpclean install uninstall
 clean: 
-	rm student
-	rm src/*.o
+	-rm -f student
+	-rm -f src/*.o
 
 tmpclean:
-	rm ./*~
-	rm inc/*~
-	rm src/*~
+	-rm -f ./*~
+	-rm -f inc/*~
+	-rm -f src/*~
 
 install:
 	sudo cp student /usr/bin/student
