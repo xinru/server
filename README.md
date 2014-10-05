@@ -1,2 +1,2 @@
-server
+Student Info Management System
 ======
